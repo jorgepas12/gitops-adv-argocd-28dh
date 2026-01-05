@@ -16,7 +16,7 @@ spec:
   - server: https://kubernetes.default.svc
     namespace: whoami-prod
 
-  # Permitimos Namespace (necesario para CreateNamespace=true)sa
+  # Permitimos Namespace (necesario para CreateNamespace=true)sad
   clusterResourceWhitelist:
   - group: ""
     kind: Namespace
