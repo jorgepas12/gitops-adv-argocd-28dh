@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: whoami-multi-env
-  namespace: ${ARGOCD_NS}
+  namespace: argocd
 spec:
   generators:
     - list:
@@ -29,7 +29,7 @@ spec:
     spec:
       project: whoami-platform
       source:
-        repoURL: ${REPO_URL}
+        repoURL: https://github.com/jorgepas12/gitops-adv-argocd-28dh.git
         targetRevision: main
       path: ''
       destination:
