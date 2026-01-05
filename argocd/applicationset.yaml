@@ -4,37 +4,44 @@ metadata:
   name: whoami-multi-env
   namespace: argocd
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
   generators:
-    - list:
-        elements:
-          - env: dev
-            ns: whoami-dev
-            path: apps/whoami/overlays/dev
-            autoSync: "true"
-          - env: stage
-            ns: whoami-stage
-            path: apps/whoami/overlays/stage
-            autoSync: "true"
-          - env: prod
-            ns: whoami-prod
-            path: apps/whoami/overlays/prod
-            autoSync: "false"
+  - list:
+      elements:
+      - env: dev
+        ns: whoami-dev
+        path: apps/whoami/overlays/dev
+        autoSync: true
+      - env: stage
+        ns: whoami-stage
+        path: apps/whoami/overlays/stage
+        autoSync: true
+      - env: prod
+        ns: whoami-prod
+        path: apps/whoami/overlays/prod
+        autoSync: false
 
   template:
     metadata:
-      name: 'whoami-'
+      name: 'whoami-{{ .env }}'
       labels:
         app.kubernetes.io/part-of: whoami
-        env: ''
+        env: '{{ .env }}'
     spec:
       project: whoami-platform
       source:
         repoURL: https://github.com/jorgepas12/gitops-adv-argocd-28dh.git
         targetRevision: main
-      path: ''
+        path: '{{ .path }}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: ''
+        namespace: '{{ .ns }}'
       syncPolicy:
+        {{- if .autoSync }}
+        automated:
+          prune: true
+          selfHeal: true
+        {{- end }}
         syncOptions:
-          - CreateNamespace=true
+        - CreateNamespace=true
