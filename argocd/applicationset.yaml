@@ -12,33 +12,33 @@ spec:
       - env: dev
         ns: whoami-dev
         path: apps/whoami/overlays/dev
-        autoSync: true
+        autoSync: "true"
       - env: stage
         ns: whoami-stage
         path: apps/whoami/overlays/stage
-        autoSync: true
+        autoSync: "true"
       - env: prod
         ns: whoami-prod
         path: apps/whoami/overlays/prod
-        autoSync: false
+        autoSync: "false"
 
   template:
     metadata:
-      name: 'whoami-{{ .env }}'
+      name: 'whoami-{{.env}}'
       labels:
         app.kubernetes.io/part-of: whoami
-        env: '{{ .env }}'
+        env: '{{.env}}'
     spec:
       project: whoami-platform
       source:
         repoURL: https://github.com/jorgepas12/gitops-adv-argocd-28dh.git
         targetRevision: main
-        path: '{{ .path }}'
+        path: '{{.path}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ .ns }}'
+        namespace: '{{.ns}}'
       syncPolicy:
-        {{- if .autoSync }}
+        {{- if eq .autoSync "true" }}
         automated:
           prune: true
           selfHeal: true
